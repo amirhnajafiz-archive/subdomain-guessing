@@ -4,27 +4,33 @@ package pkg
 // manages 3 methods for lookup types.
 type Lookup interface {
 	// TypeA ns lookup.
-	TypeA(fqdn, serverAddr string) ([]string, error)
+	TypeA() ([]string, error)
 	// TypeCNAME ns lookup.
-	TypeCNAME(fqdn, serverAddr string) ([]string, error)
+	TypeCNAME() ([]string, error)
 	// Navigate ns lookup.
-	Navigate(fqdn, serverAddr string) []Result
+	Navigate() []Result
 }
 
-type application struct{}
-
-func NewApp() Lookup {
-	return &application{}
+type application struct {
+	fqdn       string
+	serverAddr string
 }
 
-func (a *application) TypeA(fqdn, serverAddr string) ([]string, error) {
+func NewApp(fullyQualifiedDomainName string, serverAddr string) Lookup {
+	return &application{
+		fqdn:       fullyQualifiedDomainName,
+		serverAddr: serverAddr,
+	}
+}
+
+func (a *application) TypeA() ([]string, error) {
 	return nil, nil
 }
 
-func (a *application) TypeCNAME(fqdn, serverAddr string) ([]string, error) {
+func (a *application) TypeCNAME() ([]string, error) {
 	return nil, nil
 }
 
-func (a *application) Navigate(fqdn, serverAddr string) []Result {
+func (a *application) Navigate() []Result {
 	return nil
 }
