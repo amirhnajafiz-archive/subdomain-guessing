@@ -8,5 +8,5 @@ type Lookup interface {
 	// TypeCNAME ns lookup.
 	TypeCNAME(fqdn, serverAddr string) ([]string, error)
 	// Navigate ns lookup.
-	Navigate(fqdn, serverAddr string) []string
+	Navigate(fqdn, serverAddr string) []Result
 }
