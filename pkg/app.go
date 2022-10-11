@@ -1,7 +1,8 @@
 package pkg
 
 import (
-	"errors"
+	"fmt"
+
 	"github.com/miekg/dns"
 )
 
@@ -19,19 +20,19 @@ func NewApp(fullyQualifiedDomainName string, serverAddr string) Lookup {
 
 func (a *application) TypeA() ([]string, error) {
 	var (
-		m   dns.Msg
-		ips []string
+		message dns.Msg
+		ips     []string
 	)
 
-	m.SetQuestion(dns.Fqdn(a.fqdn), dns.TypeA)
+	message.SetQuestion(dns.Fqdn(a.fqdn), dns.TypeA)
 
-	in, err := dns.Exchange(&m, a.serverAddr)
+	in, err := dns.Exchange(&message, a.serverAddr)
 	if err != nil {
-		return ips, err
+		return ips, fmt.Errorf("dns exchange error: %w", err)
 	}
 
 	if len(in.Answer) < 1 {
-		return ips, errors.New("no answer")
+		return ips, fmt.Errorf("no answer for this address")
 	}
 
 	for _, answer := range in.Answer {
