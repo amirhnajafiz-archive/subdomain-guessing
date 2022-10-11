@@ -71,5 +71,30 @@ func (a *application) TypeCNAME() ([]string, error) {
 }
 
 func (a *application) Navigate() []Result {
-	return nil
+	var (
+		results []Result
+		cfqdn   = a.fqdn
+	)
+
+	for {
+		cnames, err := a.TypeCNAME()
+		if err == nil && len(cnames) > 0 {
+			cfqdn = cnames[0]
+
+			continue
+		}
+
+		ips, err := a.TypeA()
+		if err != nil {
+			break
+		}
+
+		for _, ip := range ips {
+			results = append(results, Result{IPAddress: ip, Hostname: cfqdn})
+		}
+
+		break
+	}
+
+	return results
 }
