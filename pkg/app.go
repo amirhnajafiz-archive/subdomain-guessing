@@ -45,7 +45,29 @@ func (a *application) TypeA() ([]string, error) {
 }
 
 func (a *application) TypeCNAME() ([]string, error) {
-	return nil, nil
+	var (
+		message dns.Msg
+		fqdns   []string
+	)
+
+	message.SetQuestion(dns.Fqdn(a.fqdn), dns.TypeCNAME)
+
+	in, err := dns.Exchange(&message, a.serverAddr)
+	if err != nil {
+		return fqdns, fmt.Errorf("dns exchange error: %w", err)
+	}
+
+	if len(in.Answer) < 1 {
+		return fqdns, fmt.Errorf("no answer for this address")
+	}
+
+	for _, answer := range in.Answer {
+		if c, ok := answer.(*dns.CNAME); ok {
+			fqdns = append(fqdns, c.Target)
+		}
+	}
+
+	return fqdns, nil
 }
 
 func (a *application) Navigate() []Result {
