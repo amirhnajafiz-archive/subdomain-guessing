@@ -1,6 +1,4 @@
-<h1 align="center">
-Subdomain Guessing
-</h1>
+# Subdomain Guessing
 
 Guessing a targets subdomains and other DNS records. All you need to do
 is creating a wordlist, finding a DNS address and find the source ip address
